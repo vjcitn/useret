@@ -1,0 +1,12 @@
+Package: useret
+Title: demo of reticulate interface in a package
+Description: demo of reticulate interface in a package
+Version: 0.0.0
+Author: Vince Carey
+Suggests: 
+Depends: reticulate
+Maintainer: VJ Carey <stvjc@channing.harvard.edu>
+License: Artistic-2.0
+LazyLoad: yes
+BiocViews: variants
+RoxygenNote: 6.0.1.9000
