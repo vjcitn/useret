@@ -1,0 +1,38 @@
+---
+title: "useret -- work with reticulate for python-R interoperation"
+output: 
+  pdf_document:
+    toc: no
+---
+
+# Setup
+
+```{r try}
+library(reticulate)
+
+os <- import("os")
+sy <- import("sys")
+np <- import("numpy")
+pd <- import("pandas")
+sk <- import("sklearn.decomposition")
+```
+
+# Import some 10x data
+
+We'll use R to do the I/O here.
+```{r import,cache=TRUE}
+df =  read.csv(system.file(
+        "csv/c1000p.csv.gz", package="useret"))
+class(df)
+head(df[,1:5])
+mat = data.matrix(df[,-1])
+```
+# Convert to python, try ipca
+
+```{r doconv}
+numdata = r_to_py(mat)
+class(numdata)
+numdata$shape
+ipca = sk$IncrementalPCA(numdata)
+dim(ipca$n_components)
+```
