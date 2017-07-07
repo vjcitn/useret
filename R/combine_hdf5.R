@@ -11,12 +11,13 @@ combine_files <- function(tenxfiles){
   for(i in 1:length(tenxfiles)){
     #print(tenxfiles[i])
     #grab the data from the file
-    item = myfile[i]$items()
+    f = h5py$File(tenxfiles[i])
+    item = f$items()
     data = item[[1]][[2]]
     total_cols = total_cols + data$shape[[1]]
     total_rows = data$shape[[2]]
   
-    if(i == 0){
+    if(i == 1){
       #points to the first file in the directory
       maxshape = c(1306127, 27998)
       cd = output_file$create_dataset("newassay001", c(total_cols,total_rows), data = data, maxshape=maxshape, dtype="i4", compression="gzip")
@@ -24,7 +25,7 @@ combine_files <- function(tenxfiles){
     }
     else{
       axis = 0
-      cd$resize(total_rows, axis=axis)
+      cd$resize(total_cols, axis=axis)
       #cd[where_to_start_appending:total_cols, :] = data
       where_to_start_appending = total_cols
     }
