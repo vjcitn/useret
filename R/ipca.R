@@ -70,19 +70,26 @@ setMethod("show", "H5pymat", function(object) {
  print(object@shape)
 })
 
-setGeneric("getRowChunk", function(x, start, end) standardGeneric("getRowChunk"))
-setMethod("getRowChunk", c("H5pymat", "integer", "integer"), 
-   function(x, start, end) {
+setGeneric("getRowChunk", function(x, start, end, transpose) standardGeneric("getRowChunk"))
+setMethod("getRowChunk", c("H5pymat", "integer", "integer", "logical"), 
+   function(x, start, end, transpose) {
    stopifnot(start>0, end<=x@shape[2])
    np <- import("numpy", convert=FALSE)
-   np$take( x@dataref, np$arange(start-1L, end), 1L )
+   twrap = function(x) (x)$T
+   axis = 0L
+   if (transpose==FALSE) {
+      twrap = function(x) (x)
+      axis = 1L
+      }
+   np$take( twrap(np$matrix(x@dataref)), np$arange(start-1L, end), axis )
    })  
 
-setGeneric("ipca", function(src, ncomp, batch_size) standardGeneric("ipca"))
+setGeneric("ipca", function(src, ncomp, batch_size, transpose) standardGeneric("ipca"))
 #' use chunks from remote HDF5 source to compute incremental PCA
 #' @param src H5pymat instance
 #' @param ncomp number of PCs to compute
 #' @param batch_size number of records per batch
+#' @param transpose logical -- for HDF5 matrix, set to TRUE
 #' @aliases ipca
 #' @examples
 #' d = data.matrix(iris[,1:4])
@@ -93,23 +100,31 @@ setGeneric("ipca", function(src, ncomp, batch_size) standardGeneric("ipca"))
 #' h5createFile(h5targ)
 #' h5write(d, h5targ, "iris")
 #' hmat = H5pymat(h5targ)
-#' tst = ipca(hmat, ncomp=4L, batch_size=50L)
+#' tst = ipca(hmat, ncomp=4L, batch_size=50L, transpose=TRUE)
 #' dim(tst)
 #' @exportMethod ipca
-setMethod("ipca", c("H5pymat", "integer", "integer"), function(src, ncomp, batch_size) {
+setMethod("ipca", c("H5pymat", "integer", "integer", "logical"), function(src, ncomp, batch_size, transpose=TRUE) {
+  if (transpose==FALSE) stop("currently only R-mode PCA supported")
   nr = src@shape[2]
+  nc = src@shape[1]
+  if (nc > nr) stop("must have at least as many records as features")
+  if (transpose==FALSE) nr=src@shape[1]
+  message("importing python infrastructure...")
   np <- import("numpy", convert=FALSE)
   pd <- import("pandas")
   h5py <- import("h5py")
   sk <- import("sklearn.decomposition")
+  message("done.")
   ipca = sk$IncrementalPCA(n_components=ncomp, batch_size=batch_size)
   starts = as.integer(seq(1, nr, batch_size))
   ends = as.integer(c(starts[-1]-1, nr))
 # build incremental PCA components
+  twrap = function(x) (x)$T
+  if (transpose==FALSE) twrap = function(x) (x)
   for (i in 1:length(starts)) 
-    ipca$partial_fit( getRowChunk(src, starts[i], ends[i])$T )
+    ipca$partial_fit( getRowChunk(src, starts[i], ends[i], transpose) )
 # construct the reexpressed data by chunk
-  res = lapply(1:length(starts), function(x) ipca$transform( getRowChunk(src, starts[x], ends[x])$T ))
+  res = lapply(1:length(starts), function(x) ipca$transform( getRowChunk(src, starts[x], ends[x], transpose) ) )
   do.call(rbind, res) # should also return the python structure
 })
 
