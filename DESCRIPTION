@@ -1,7 +1,7 @@
 Package: useret
 Title: demo of reticulate interface in a package
 Description: demo of reticulate interface in a package
-Version: 0.0.7
+Version: 0.0.8
 Author: Vince Carey
 Suggests: 
 Depends: reticulate

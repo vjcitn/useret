@@ -20,12 +20,12 @@
 ipca_mono = function(x, n_comp=2L, batch_size=25L, ...) {
   n_comp = as.integer(n_comp) # be sure
   batch_size = as.integer(batch_size) # be sure
-  message("initializing python infrastructure...")
-  np <- import("numpy", convert=FALSE)
-  pd <- import("pandas")
-  sk <- import("sklearn.decomposition")
-  h5py <- import("h5py")
-  message("done.")
+#  message("initializing python infrastructure...")
+#  np <- import("numpy", convert=FALSE)
+#  pd <- import("pandas")
+#  sk <- import("sklearn.decomposition")
+#  h5py <- import("h5py")
+#  message("done.")
   tr = np$matrix
   tr = tr$transpose # cannot compose?
   if (is(x, "character")) {
@@ -55,7 +55,7 @@ setClass("H5pymat", representation(filename="character", handle="h5py._hl.files.
 #' @param fn file name for HDF5 matrix
 #' @export
 H5pymat = function(fn) {
-  h5py <- import("h5py")
+#  h5py <- import("h5py")
   f1 = h5py$File(fn)
   item = f1$items()
   dataref = item[[1]][[2]] #
@@ -74,7 +74,7 @@ setGeneric("getRowChunk", function(x, start, end, transpose) standardGeneric("ge
 setMethod("getRowChunk", c("H5pymat", "integer", "integer", "logical"), 
    function(x, start, end, transpose) {
    stopifnot(start>0, end<=x@shape[2])
-   np <- import("numpy", convert=FALSE)
+#   np <- import("numpy", convert=FALSE)
    twrap = function(x) (x)$T
    axis = 0L
    if (transpose==FALSE) {
@@ -109,12 +109,12 @@ setMethod("ipca", c("H5pymat", "integer", "integer", "logical"), function(src, n
   nc = src@shape[1]
   if (nc > nr) stop("must have at least as many records as features")
   if (transpose==FALSE) nr=src@shape[1]
-  message("importing python infrastructure...")
-  np <- import("numpy", convert=FALSE)
-  pd <- import("pandas")
-  h5py <- import("h5py")
-  sk <- import("sklearn.decomposition")
-  message("done.")
+#  message("importing python infrastructure...")
+#  np <- import("numpy", convert=FALSE)
+#  pd <- import("pandas")
+#  h5py <- import("h5py")
+#  sk <- import("sklearn.decomposition")
+#  message("done.")
   ipca = sk$IncrementalPCA(n_components=ncomp, batch_size=batch_size)
   starts = as.integer(seq(1, nr, batch_size))
   ends = as.integer(c(starts[-1]-1, nr))
