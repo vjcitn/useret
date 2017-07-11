@@ -1,3 +1,10 @@
+#' onLoad
+#' @name onLoad
+#' @rdname infrastructure
+#' @export np
+#' @export pd
+#' @export h5py
+#' @export sk
 .onLoad = function(libname, pkgname) {
   message("Setting up python infrastructure, including numpy with convert=FALSE ...")
   np <<- import("numpy", delay_load=TRUE, convert=FALSE)

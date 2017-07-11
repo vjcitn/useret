@@ -16,7 +16,7 @@
 
 \item{batch_size}{number of records per batch}
 
-\item{transpose}{logical}
+\item{transpose}{logical -- for HDF5 matrix, set to TRUE}
 }
 \description{
 use chunks from remote HDF5 source to compute incremental PCA
@@ -27,6 +27,7 @@ p = prcomp(d)
 dim(p$x)
 h5targ = tempfile()
 require(rhdf5)
+require(useret)
 h5createFile(h5targ)
 h5write(d, h5targ, "iris")
 hmat = H5pymat(h5targ)

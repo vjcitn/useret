@@ -1,9 +1,9 @@
 Package: useret
 Title: demo of reticulate interface in a package
 Description: demo of reticulate interface in a package
-Version: 0.0.8
+Version: 0.0.9
 Author: Vince Carey
-Suggests: 
+Suggests: knitr
 Depends: reticulate
 Maintainer: VJ Carey <stvjc@channing.harvard.edu>
 License: Artistic-2.0

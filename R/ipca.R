@@ -97,6 +97,7 @@ setGeneric("ipca", function(src, ncomp, batch_size, transpose) standardGeneric("
 #' dim(p$x)
 #' h5targ = tempfile()
 #' require(rhdf5)
+#' require(useret)
 #' h5createFile(h5targ)
 #' h5write(d, h5targ, "iris")
 #' hmat = H5pymat(h5targ)
