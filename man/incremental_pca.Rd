@@ -4,10 +4,16 @@
 \alias{incremental_pca}
 \title{perform incremental pca on a hdf5 file}
 \usage{
-incremental_pca(filepath)
+incremental_pca(filepath, n_comp = 2L, batch_size = 2L, chunk_size = 10L)
 }
 \arguments{
 \item{filepath}{path to hdf5 file}
+
+\item{n_comp}{target number of pca components to obtain}
+
+\item{batch_size}{integer}
+
+\item{chunk_size}{integer}
 }
 \description{
 perform incremental pca on a hdf5 file

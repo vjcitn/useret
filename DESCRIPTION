@@ -1,7 +1,7 @@
 Package: useret
 Title: demo of reticulate interface in a package
 Description: demo of reticulate interface in a package
-Version: 0.0.3
+Version: 0.0.6
 Author: Vince Carey
 Suggests: 
 Depends: reticulate
@@ -10,3 +10,4 @@ License: Artistic-2.0
 LazyLoad: yes
 BiocViews: variants
 RoxygenNote: 6.0.1.9000
+VignetteBuilder: knitr
